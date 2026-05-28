@@ -41,6 +41,23 @@ function makeQuestions(items: QuestionInput[]): Question[] {
   }));
 }
 
+function shuffleChoices(question: Question): Question {
+  const choices = [...question.choices];
+
+  for (let index = choices.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [choices[index], choices[swapIndex]] = [choices[swapIndex], choices[index]];
+  }
+
+  return {
+    ...question,
+    choices: choices.map((choice, index) => ({
+      ...choice,
+      id: String.fromCharCode(97 + index),
+    })),
+  };
+}
+
 export const QUESTIONS: Record<ModeId, Question[]> = {
   "date-night": makeQuestions([
     ["A friend suggests a restaurant you don’t love, but they seem excited about it.", ["Choosing connection over preference", "A serious food emergency", "Proof that menus are too long"], "Choosing connection over preference", "Tell about a time you went along with something small because it mattered to someone else."],
@@ -210,7 +227,7 @@ export function sampleQuestions(questionBank: Question[], count = 5): Question[]
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
 
-  return shuffled.slice(0, count);
+  return shuffled.slice(0, count).map(shuffleChoices);
 }
 
 export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
