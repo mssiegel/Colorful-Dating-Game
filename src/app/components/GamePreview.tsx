@@ -1,0 +1,105 @@
+import { Character } from "./Character";
+import { FloatingChip } from "./FloatingChip";
+
+const QUESTION = {
+  scenario:
+    "You borrowed something. Returning it is inconvenient. You're thinking of keeping it for now.",
+  options: [
+    { id: "a", label: "A break in personal values", correct: true },
+    { id: "b", label: "Impractical thinking", correct: false },
+    { id: "c", label: "A love for life", correct: false },
+  ],
+};
+
+export function GamePreview() {
+  return (
+    <div className="relative w-full h-full flex flex-col items-center justify-between pt-6 pb-4">
+      <div className="relative w-full h-28">
+        <FloatingChip style={{ top: "10px", left: "5%" }} delay={0.1}>
+          personal values 💡
+        </FloatingChip>
+        <FloatingChip style={{ top: "0px", right: "8%", background: "#fff8f5", borderColor: "rgba(124,58,237,0.2)" }} delay={0.5} className="hidden sm:block">
+          wisdom check 🧠
+        </FloatingChip>
+        <FloatingChip style={{ bottom: "0px", left: "30%" }} delay={0.9}>
+          share a memory ✨
+        </FloatingChip>
+      </div>
+
+      <div className="mb-2">
+        <Character mood="happy" />
+      </div>
+
+      <div className="w-full max-w-[340px] mx-auto">
+        <div
+          className="rounded-2xl p-4 mb-3"
+          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: "0 4px 20px rgba(255,77,126,0.08)" }}
+        >
+          <p
+            className="text-xs uppercase tracking-widest mb-1"
+            style={{ fontFamily: "Nunito, sans-serif", color: "#ff4d7e", fontWeight: 800 }}
+          >
+            Scenario · Round 1
+          </p>
+          <p style={{ fontFamily: "Nunito, sans-serif", color: "#1a0a2e", fontSize: "0.88rem", lineHeight: "1.55" }}>
+            {QUESTION.scenario}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {QUESTION.options.map((opt) => {
+            const isCorrect = opt.correct;
+            const bg = isCorrect ? "#f0fdf4" : "white";
+            const border = isCorrect ? "2px solid #34d399" : "2px solid rgba(0,0,0,0.08)";
+            const textColor = isCorrect ? "#065f46" : "#9d8aaa";
+            const dotBg = isCorrect ? "#34d399" : "#ececf0";
+
+            return (
+              <div
+                key={opt.id}
+                className="text-left rounded-xl px-3 py-2.5 flex items-center gap-3"
+                style={{ background: bg, border }}
+              >
+                <span
+                  className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs"
+                  style={{ background: dotBg, color: "white", fontFamily: "Fredoka, sans-serif", fontWeight: 700 }}
+                >
+                  {opt.id.toUpperCase()}
+                </span>
+                <span style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
+                  {opt.label}
+                </span>
+                {isCorrect && <span className="ml-auto text-green-500 text-sm">✓</span>}
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          className="rounded-xl px-3 py-2.5 mt-2"
+          style={{ background: "#f5f0ff", border: "2px solid rgba(124,58,237,0.2)" }}
+        >
+          <p style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.78rem", color: "#5b21b6", lineHeight: "1.5" }}>
+            💬 <strong>Share a memory!</strong> Tell your partner about a time you bent your own rules. What happened?
+          </p>
+        </div>
+
+        <div
+          className="w-full rounded-xl py-2.5 mt-3 text-center"
+          style={{
+            background: "linear-gradient(135deg, #7c3aed, #ff4d7e)",
+            color: "white",
+            fontFamily: "Fredoka, sans-serif",
+            fontSize: "0.95rem",
+            filter: "blur(1.5px)",
+            opacity: 0.5,
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          Next Question →
+        </div>
+      </div>
+    </div>
+  );
+}
