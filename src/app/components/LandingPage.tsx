@@ -64,9 +64,15 @@ export function LandingPage() {
 
           <div className="flex flex-col items-start gap-2">
             <motion.button
+              animate={{
+                scale: [1, 1.035, 1],
+                boxShadow: [shadows.button, "0 14px 36px rgba(255,77,126,0.34)", shadows.button],
+              }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
               whileHover={{ scale: 1.03, boxShadow: shadows.buttonHover }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(`/play/${activeMode}`)}
+              aria-label={`Start playing ${activeModeConfig.label}`}
               className="flex items-center gap-2 px-7 py-3.5 rounded-full"
               style={{
                 background: gradients.brand,
@@ -77,8 +83,15 @@ export function LandingPage() {
                 cursor: "pointer",
               }}
             >
-              Start {activeModeConfig.label}
-              <Play aria-hidden="true" size={18} fill="currentColor" strokeWidth={2.5} />
+              Start playing
+              <motion.span
+                aria-hidden="true"
+                animate={{ x: [0, 3, 0], scale: [1, 1.12, 1] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                className="flex"
+              >
+                <Play size={18} fill="currentColor" strokeWidth={2.5} />
+              </motion.span>
             </motion.button>
             <p style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}>
               Selected mode:{" "}
