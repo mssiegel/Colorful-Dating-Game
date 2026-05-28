@@ -6,8 +6,11 @@ import { borders, colors, fonts, gradients, shadows } from "../visualTokens";
 const QUESTION = {
   scenario:
     "A friend is telling a story that is taking way longer than expected, but you can tell it matters to them, so you stay interested.",
-  choices: ["Making space for someone", "Advanced nodding endurance", "Emergency story survival mode"],
-  correctAnswer: "Making space for someone",
+  choices: [
+    { id: "a", label: "Making space for someone", correct: true },
+    { id: "b", label: "Advanced nodding endurance", correct: false },
+    { id: "c", label: "Emergency story survival mode", correct: false },
+  ],
   conversationPrompt:
     "Tell your partner about a time someone made you feel heard, even when what you were saying was small.",
 };
@@ -48,9 +51,8 @@ export function GamePreview() {
         </div>
 
         <div className="flex flex-col gap-2">
-          {QUESTION.choices.map((choice, index) => {
-            const optionLabel = String.fromCharCode(97 + index);
-            const isCorrect = choice === QUESTION.correctAnswer;
+          {QUESTION.choices.map((choice) => {
+            const isCorrect = choice.correct;
             const bg = isCorrect ? colors.correctBg : colors.white;
             const border = isCorrect ? `2px solid ${colors.correctBorder}` : `2px solid ${borders.neutralChoice}`;
             const textColor = isCorrect ? colors.correctText : colors.subtle;
@@ -58,7 +60,7 @@ export function GamePreview() {
 
             return (
               <div
-                key={choice}
+                key={choice.id}
                 className="text-left rounded-xl px-3 py-2.5 flex items-center gap-3"
                 style={{ background: bg, border }}
               >
@@ -66,10 +68,10 @@ export function GamePreview() {
                   className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs"
                   style={{ background: dotBg, color: colors.white, fontFamily: fonts.heading, fontWeight: 700 }}
                 >
-                  {optionLabel.toUpperCase()}
+                  {choice.id.toUpperCase()}
                 </span>
                 <span style={{ fontFamily: fonts.body, fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
-                  {choice}
+                  {choice.label}
                 </span>
                 {isCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={16} strokeWidth={3} style={{ color: colors.correctIcon }} />}
               </div>

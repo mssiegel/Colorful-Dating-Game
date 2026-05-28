@@ -1,8 +1,13 @@
+export interface Choice {
+  id: string;
+  label: string;
+  correct: boolean;
+}
+
 export interface Question {
   scenario: string;
   prompt: "What does this represent?";
-  choices: string[];
-  correctAnswer: string;
+  choices: Choice[];
   conversationPrompt: string;
 }
 
@@ -27,8 +32,11 @@ function makeQuestions(items: QuestionInput[]): Question[] {
   return items.map(([scenario, choices, correctAnswer, conversationPrompt]) => ({
     scenario,
     prompt: "What does this represent?",
-    choices,
-    correctAnswer,
+    choices: choices.map((choice, index) => ({
+      id: String.fromCharCode(97 + index),
+      label: choice,
+      correct: choice === correctAnswer,
+    })),
     conversationPrompt,
   }));
 }

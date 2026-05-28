@@ -96,17 +96,20 @@ export function PlayPage() {
   const modeConfig = MODE_CONFIG[mode];
   const questions = gameSession.questions;
   const question = questions[currentIndex];
-  const selectedChoice = selected ? question.choices[Number(selected)] : undefined;
+  const selectedChoice = selected ? question.choices.find((choice) => choice.id === selected) : undefined;
   const hasAnswered = Boolean(selectedChoice);
-  const mood = !hasAnswered ? "idle" : selectedChoice === question.correctAnswer ? "happy" : "thinking";
+  const mood = !hasAnswered ? "idle" : selectedChoice?.correct ? "happy" : "thinking";
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
-  function handleSelect(optionId: string) {
+  function handleSelect(choiceId: string) {
     if (selected || isAdvancing) return;
 
-    setSelected(optionId);
+    const choice = question.choices.find((item) => item.id === choiceId);
+    if (!choice) return;
 
-    if (question.choices[Number(optionId)] === question.correctAnswer) {
+    setSelected(choiceId);
+
+    if (choice.correct) {
       setScore((currentScore) => currentScore + 1);
     }
   }
@@ -264,11 +267,9 @@ export function PlayPage() {
               </p>
 
               <motion.div className="flex flex-col gap-2.5" variants={choicesVariants} initial="enter" animate="center">
-                {question.choices.map((choice, index) => {
-                  const optionId = String(index);
-                  const optionLabel = String.fromCharCode(97 + index);
-                  const isCorrect = choice === question.correctAnswer;
-                  const isSelected = selected === optionId;
+                {question.choices.map((choice) => {
+                  const isCorrect = choice.correct;
+                  const isSelected = selected === choice.id;
                   const revealCorrect = hasAnswered && isCorrect;
                   const revealWrongSelection = hasAnswered && isSelected && !isCorrect;
                   const bg = revealCorrect ? colors.correctBg : colors.white;
@@ -278,12 +279,12 @@ export function PlayPage() {
 
                   return (
                     <motion.button
-                      key={choice}
+                      key={choice.id}
                       variants={choiceVariants}
                       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
                       whileHover={!hasAnswered ? { y: -2, borderColor: modeConfig.color, boxShadow: `0 8px 22px ${modeConfig.glow}` } : undefined}
                       whileTap={!hasAnswered ? { scale: 0.985 } : undefined}
-                      onClick={() => handleSelect(optionId)}
+                      onClick={() => handleSelect(choice.id)}
                       disabled={hasAnswered}
                       className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left"
                       style={{ background: bg, border: `2px solid ${border}`, cursor: hasAnswered ? "default" : "pointer" }}
@@ -292,9 +293,9 @@ export function PlayPage() {
                         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs"
                         style={{ background: dotBg, color: colors.white, fontFamily: fonts.heading, fontWeight: 700 }}
                       >
-                        {optionLabel.toUpperCase()}
+                        {choice.id.toUpperCase()}
                       </span>
-                      <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{choice}</span>
+                      <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{choice.label}</span>
                       {revealCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: colors.correctIcon }} />}
                       {revealWrongSelection && <X aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: colors.primary }} />}
                     </motion.button>
