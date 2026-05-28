@@ -3,45 +3,12 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { Play } from "lucide-react";
 import { GamePreview } from "./GamePreview";
-
-const MODES = [
-  {
-    id: "date-night",
-    label: "Date Night",
-    emoji: "🕯️",
-    tagline: "Light & playful",
-    color: "#f59e0b",
-    bg: "#fffbeb",
-    border: "#fde68a",
-    glow: "rgba(245,158,11,0.2)",
-  },
-  {
-    id: "deep-dive",
-    label: "Deep Dive",
-    emoji: "🧠",
-    tagline: "Core values",
-    recommended: true,
-    color: "#ff4d7e",
-    bg: "#fff1f7",
-    border: "#ff4d7e",
-    glow: "rgba(255,77,126,0.2)",
-  },
-  {
-    id: "long-distance",
-    label: "Long Distance",
-    emoji: "💌",
-    tagline: "Heartfelt",
-    color: "#7c3aed",
-    bg: "#f5f0ff",
-    border: "#c4b5fd",
-    glow: "rgba(124,58,237,0.18)",
-  },
-];
+import { DEFAULT_MODE_ID, MODES, type ModeId } from "../data/questions";
 
 export function LandingPage() {
-  const [activeMode, setActiveMode] = useState("deep-dive");
+  const [activeMode, setActiveMode] = useState<ModeId>(DEFAULT_MODE_ID);
   const navigate = useNavigate();
-  const activeModeConfig = MODES.find((mode) => mode.id === activeMode) ?? MODES[1];
+  const activeModeConfig = MODES.find((mode) => mode.id === activeMode) ?? MODES.find((mode) => mode.id === DEFAULT_MODE_ID) ?? MODES[0];
 
   return (
     <div
@@ -132,12 +99,12 @@ export function LandingPage() {
                     key={mode.id}
                     onClick={() => setActiveMode(mode.id)}
                     aria-pressed={isActive}
-                    whileHover={{ y: -3, boxShadow: `0 8px 24px ${mode.glow}` }}
+                    whileHover={{ y: -3, boxShadow: `0 8px 24px ${mode.softGlow}` }}
                     whileTap={{ scale: 0.95 }}
                     animate={{
-                      background: isActive ? mode.bg : "#f8f8fb",
+                      background: isActive ? mode.surfaceBg : "#f8f8fb",
                       borderColor: isActive ? mode.border : "rgba(0,0,0,0)",
-                      boxShadow: isActive ? `0 8px 24px ${mode.glow}` : "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
+                      boxShadow: isActive ? `0 8px 24px ${mode.softGlow}` : "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
                     }}
                     transition={{ duration: 0.2 }}
                     className="relative flex w-full flex-col items-start px-4 py-3 rounded-2xl sm:w-auto"

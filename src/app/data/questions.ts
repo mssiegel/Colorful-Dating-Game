@@ -16,8 +16,10 @@ export type ModeConfig = {
   tagline: string;
   color: string;
   bg: string;
+  surfaceBg: string;
   border: string;
   glow: string;
+  softGlow: string;
   recommended?: boolean;
 };
 
@@ -210,8 +212,10 @@ export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
     tagline: "Light & playful",
     color: "#f59e0b",
     bg: "rgba(245,158,11,0.15)",
+    surfaceBg: "#fffbeb",
     border: "#fde68a",
     glow: "rgba(245,158,11,0.3)",
+    softGlow: "rgba(245,158,11,0.2)",
   },
   "deep-dive": {
     label: "Deep Dive",
@@ -219,8 +223,10 @@ export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
     tagline: "Core values",
     color: "#ff4d7e",
     bg: "rgba(255,77,126,0.15)",
+    surfaceBg: "#fff1f7",
     border: "#ff4d7e",
     glow: "rgba(255,77,126,0.3)",
+    softGlow: "rgba(255,77,126,0.2)",
     recommended: true,
   },
   "long-distance": {
@@ -229,8 +235,10 @@ export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
     tagline: "Heartfelt",
     color: "#7c3aed",
     bg: "rgba(124,58,237,0.15)",
+    surfaceBg: "#f5f0ff",
     border: "#c4b5fd",
     glow: "rgba(124,58,237,0.3)",
+    softGlow: "rgba(124,58,237,0.18)",
   },
 };
 

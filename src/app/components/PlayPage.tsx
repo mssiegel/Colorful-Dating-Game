@@ -2,14 +2,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
+import { MODES, QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
 import { Character } from "./Character";
 
-const MODE_IDS: ModeId[] = ["date-night", "deep-dive", "long-distance"];
 type GameSession = { mode: ModeId | null; questions: Question[] };
 
 function isModeId(mode: string | undefined): mode is ModeId {
-  return Boolean(mode && MODE_IDS.includes(mode as ModeId));
+  return Boolean(mode && MODES.some((modeConfig) => modeConfig.id === mode));
 }
 
 function getScoreMessage(score: number) {
