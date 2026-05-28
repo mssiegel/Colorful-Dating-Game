@@ -9,6 +9,17 @@ export interface Question {
 export type ModeId = "date-night" | "deep-dive" | "long-distance";
 
 type QuestionInput = [scenario: string, choices: string[], correctAnswer: string, conversationPrompt: string];
+export type ModeConfig = {
+  id: ModeId;
+  label: string;
+  emoji: string;
+  tagline: string;
+  color: string;
+  bg: string;
+  border: string;
+  glow: string;
+  recommended?: boolean;
+};
 
 function makeQuestions(items: QuestionInput[]): Question[] {
   return items.map(([scenario, choices, correctAnswer, conversationPrompt]) => ({
@@ -192,26 +203,41 @@ export function sampleQuestions(questionBank: Question[], count = 5): Question[]
   return shuffled.slice(0, count);
 }
 
-export const MODE_CONFIG: Record<ModeId, { label: string; emoji: string; color: string; bg: string; glow: string }> = {
+export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
   "date-night": {
     label: "Date Night",
     emoji: "🕯️",
+    tagline: "Light & playful",
     color: "#f59e0b",
     bg: "rgba(245,158,11,0.15)",
+    border: "#fde68a",
     glow: "rgba(245,158,11,0.3)",
   },
   "deep-dive": {
     label: "Deep Dive",
     emoji: "🧠",
+    tagline: "Core values",
     color: "#ff4d7e",
     bg: "rgba(255,77,126,0.15)",
+    border: "#ff4d7e",
     glow: "rgba(255,77,126,0.3)",
+    recommended: true,
   },
   "long-distance": {
     label: "Long Distance",
     emoji: "💌",
+    tagline: "Heartfelt",
     color: "#7c3aed",
     bg: "rgba(124,58,237,0.15)",
+    border: "#c4b5fd",
     glow: "rgba(124,58,237,0.3)",
   },
 };
+
+export const MODES: ModeConfig[] = [
+  { id: "date-night", ...MODE_CONFIG["date-night"] },
+  { id: "deep-dive", ...MODE_CONFIG["deep-dive"] },
+  { id: "long-distance", ...MODE_CONFIG["long-distance"] },
+];
+
+export const DEFAULT_MODE_ID: ModeId = "deep-dive";
