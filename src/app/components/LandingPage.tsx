@@ -47,7 +47,7 @@ export function LandingPage() {
       className="min-h-screen w-full"
       style={{ fontFamily: "Nunito, sans-serif", background: "linear-gradient(160deg, #fff0f5 0%, #f8f4ff 50%, #fff5f0 100%)" }}
     >
-      <nav className="flex items-center justify-between px-8 py-4 max-w-6xl mx-auto">
+      <nav className="flex items-center justify-between px-5 py-4 sm:px-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
@@ -61,13 +61,13 @@ export function LandingPage() {
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-8 pt-10 pb-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="flex flex-col gap-5">
+      <main className="max-w-6xl mx-auto px-5 pt-3 pb-10 sm:px-8 sm:pt-8 sm:pb-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="flex flex-col gap-4 sm:gap-5">
           <div>
             <h1
+              className="text-[2.55rem] sm:text-[3.4rem] lg:text-[4.2rem]"
               style={{
                 fontFamily: "Fredoka, sans-serif",
-                fontSize: "clamp(3rem, 5.5vw, 4.2rem)",
                 lineHeight: "1.1",
                 fontWeight: 700,
                 color: "#ff4d7e",
@@ -77,9 +77,9 @@ export function LandingPage() {
               Think deeper.
             </h1>
             <h1
+              className="text-[2.55rem] sm:text-[3.4rem] lg:text-[4.2rem]"
               style={{
                 fontFamily: "Fredoka, sans-serif",
-                fontSize: "clamp(3rem, 5.5vw, 4.2rem)",
                 lineHeight: "1.1",
                 fontWeight: 700,
                 color: "#7c3aed",
@@ -89,7 +89,7 @@ export function LandingPage() {
             </h1>
           </div>
 
-          <p style={{ color: "#6b5b7b", fontSize: "1.05rem", lineHeight: "1.7", maxWidth: "420px" }}>
+          <p className="max-w-[420px]" style={{ color: "#6b5b7b", fontSize: "1.05rem", lineHeight: "1.7" }}>
             A wisdom game for couples. Each question has one right answer — and a story only you two can share.
           </p>
 
@@ -122,7 +122,7 @@ export function LandingPage() {
             <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "#b0afc0", letterSpacing: "0.08em" }} className="uppercase mb-3">
               Choose your mode
             </p>
-            <div className="flex gap-3 flex-wrap">
+            <div className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
               {MODES.map((mode) => {
                 const isActive = activeMode === mode.id;
                 return (
@@ -138,7 +138,7 @@ export function LandingPage() {
                       boxShadow: isActive ? `0 8px 24px ${mode.glow}` : "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
                     }}
                     transition={{ duration: 0.2 }}
-                    className="relative flex flex-col items-start px-4 py-3 rounded-2xl"
+                    className="relative flex w-full flex-col items-start px-4 py-3 rounded-2xl sm:w-auto"
                     style={{
                       border: "2px solid",
                       minWidth: "118px",
@@ -211,10 +211,9 @@ export function LandingPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="relative rounded-3xl overflow-hidden"
+          className="relative rounded-3xl overflow-hidden min-h-[390px] sm:min-h-[440px] lg:min-h-[480px]"
           style={{
             background: "#ffffff",
-            minHeight: "480px",
             border: "2px solid rgba(255,77,126,0.08)",
             boxShadow: "0 8px 40px rgba(124,58,237,0.1), 0 2px 12px rgba(255,77,126,0.08)",
           }}
