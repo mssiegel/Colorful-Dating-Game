@@ -23,6 +23,27 @@ const pageStyle = {
   background: "linear-gradient(160deg, #fff0f5 0%, #f8f4ff 50%, #fff5f0 100%)",
 };
 
+const questionTransition = {
+  duration: 0.32,
+  ease: [0.22, 1, 0.36, 1],
+} as const;
+
+const questionVariants = {
+  enter: { opacity: 0, y: 18, scale: 0.98, filter: "blur(3px)" },
+  center: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -14, scale: 0.99, filter: "blur(2px)" },
+};
+
+const choicesVariants = {
+  enter: { transition: { staggerChildren: 0.055, delayChildren: 0.08 } },
+  center: { transition: { staggerChildren: 0.045 } },
+};
+
+const choiceVariants = {
+  enter: { opacity: 0, y: 10, scale: 0.99 },
+  center: { opacity: 1, y: 0, scale: 1 },
+};
+
 export function PlayPage() {
   const { mode } = useParams();
   const navigate = useNavigate();
@@ -30,6 +51,7 @@ export function PlayPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
+  const [isAdvancing, setIsAdvancing] = useState(false);
   const [gameSession, setGameSession] = useState<GameSession>(() => ({
     mode: isModeId(mode) ? mode : null,
     questions: isModeId(mode) ? sampleQuestions(QUESTIONS[mode]) : [],
@@ -51,6 +73,7 @@ export function PlayPage() {
     setSelected(null);
     setScore(0);
     setDone(false);
+    setIsAdvancing(false);
   }, [mode, gameSession.mode]);
 
   if (!isModeId(mode)) {
@@ -88,7 +111,7 @@ export function PlayPage() {
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   function handleSelect(optionId: string) {
-    if (selected) return;
+    if (selected || isAdvancing) return;
 
     setSelected(optionId);
 
@@ -98,15 +121,23 @@ export function PlayPage() {
   }
 
   function handleNext() {
-    if (!hasAnswered) return;
+    if (!hasAnswered || isAdvancing) return;
+
+    setIsAdvancing(true);
 
     if (currentIndex === questions.length - 1) {
-      setDone(true);
+      window.setTimeout(() => {
+        setDone(true);
+        setIsAdvancing(false);
+      }, 180);
       return;
     }
 
-    setCurrentIndex((index) => index + 1);
-    setSelected(null);
+    window.setTimeout(() => {
+      setCurrentIndex((index) => index + 1);
+      setSelected(null);
+      setIsAdvancing(false);
+    }, 180);
   }
 
   function handlePlayAgain() {
@@ -115,6 +146,7 @@ export function PlayPage() {
     setSelected(null);
     setScore(0);
     setDone(false);
+    setIsAdvancing(false);
   }
 
   if (done) {
@@ -189,14 +221,18 @@ export function PlayPage() {
           <motion.div
             className="h-full rounded-full"
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3 }}
+            transition={{ type: "spring", stiffness: 130, damping: 22 }}
             style={{ background: `linear-gradient(135deg, ${modeConfig.color}, #7c3aed)` }}
           />
         </div>
 
-        <main
+        <motion.main
+          animate={{
+            boxShadow: hasAnswered ? `0 14px 46px ${modeConfig.glow}` : `0 8px 40px ${modeConfig.glow}`,
+          }}
+          transition={{ duration: 0.28 }}
           className="relative overflow-hidden rounded-3xl px-4 pb-5 pt-6 sm:px-7 sm:pb-7"
-          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: `0 8px 40px ${modeConfig.glow}` }}
+          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)" }}
         >
           <div className="pointer-events-none absolute left-5 top-5 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-widest" style={{ background: modeConfig.bg, color: modeConfig.color }}>
             Question {currentIndex + 1}
@@ -215,10 +251,11 @@ export function PlayPage() {
           <AnimatePresence mode="wait">
             <motion.section
               key={currentIndex}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
+              variants={questionVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={questionTransition}
               className="mx-auto max-w-xl"
             >
               <div
@@ -235,7 +272,7 @@ export function PlayPage() {
                 {question.prompt}
               </p>
 
-              <div className="flex flex-col gap-2.5">
+              <motion.div className="flex flex-col gap-2.5" variants={choicesVariants} initial="enter" animate="center">
                 {question.choices.map((choice, index) => {
                   const optionId = String(index);
                   const optionLabel = String.fromCharCode(97 + index);
@@ -251,9 +288,10 @@ export function PlayPage() {
                   return (
                     <motion.button
                       key={choice}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      variants={choiceVariants}
+                      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                      whileHover={!hasAnswered ? { y: -2, borderColor: modeConfig.color, boxShadow: `0 8px 22px ${modeConfig.glow}` } : undefined}
+                      whileTap={!hasAnswered ? { scale: 0.985 } : undefined}
                       onClick={() => handleSelect(optionId)}
                       disabled={hasAnswered}
                       className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left"
@@ -271,7 +309,7 @@ export function PlayPage() {
                     </motion.button>
                   );
                 })}
-              </div>
+              </motion.div>
 
               <AnimatePresence>
                 {hasAnswered && (
@@ -300,17 +338,27 @@ export function PlayPage() {
                     whileHover={{ scale: 1.02, boxShadow: "0 12px 32px rgba(255,77,126,0.24)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
+                    disabled={isAdvancing}
                     className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center"
-                    style={{ background: "linear-gradient(135deg, #7c3aed, #ff4d7e)", color: "white", fontFamily: "Fredoka, sans-serif", fontSize: "1rem", cursor: "pointer" }}
+                    style={{
+                      background: "linear-gradient(135deg, #7c3aed, #ff4d7e)",
+                      color: "white",
+                      fontFamily: "Fredoka, sans-serif",
+                      fontSize: "1rem",
+                      cursor: isAdvancing ? "wait" : "pointer",
+                      opacity: isAdvancing ? 0.82 : 1,
+                    }}
                   >
                     {currentIndex === questions.length - 1 ? "See score" : "Next Question"}
-                    <ArrowRight aria-hidden="true" size={18} strokeWidth={2.5} />
+                    <motion.span animate={{ x: isAdvancing ? 6 : 0 }} transition={{ duration: 0.18 }}>
+                      <ArrowRight aria-hidden="true" size={18} strokeWidth={2.5} />
+                    </motion.span>
                   </motion.button>
                 )}
               </AnimatePresence>
             </motion.section>
           </AnimatePresence>
-        </main>
+        </motion.main>
       </div>
     </div>
   );
