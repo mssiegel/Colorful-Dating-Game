@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { QUESTIONS, MODE_CONFIG, type ModeId } from "../data/questions";
+import { QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
 import { Character } from "./Character";
 
 const MODE_IDS: ModeId[] = ["date-night", "deep-dive", "long-distance"];
+type GameSession = { mode: ModeId | null; questions: Question[] };
 
 function isModeId(mode: string | undefined): mode is ModeId {
   return Boolean(mode && MODE_IDS.includes(mode as ModeId));
@@ -28,6 +29,28 @@ export function PlayPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
+  const [gameSession, setGameSession] = useState<GameSession>(() => ({
+    mode: isModeId(mode) ? mode : null,
+    questions: isModeId(mode) ? sampleQuestions(QUESTIONS[mode]) : [],
+  }));
+
+  useEffect(() => {
+    if (!isModeId(mode)) {
+      if (gameSession.mode !== null) {
+        setGameSession({ mode: null, questions: [] });
+      }
+
+      return;
+    }
+
+    if (gameSession.mode === mode) return;
+
+    setGameSession({ mode, questions: sampleQuestions(QUESTIONS[mode]) });
+    setCurrentIndex(0);
+    setSelected(null);
+    setScore(0);
+    setDone(false);
+  }, [mode, gameSession.mode]);
 
   if (!isModeId(mode)) {
     return (
@@ -54,21 +77,20 @@ export function PlayPage() {
     );
   }
 
-  const questions = QUESTIONS[mode];
   const modeConfig = MODE_CONFIG[mode];
+  const questions = gameSession.questions;
   const question = questions[currentIndex];
-  const selectedOption = selected ? question.options.find((option) => option.id === selected) : undefined;
-  const hasAnswered = Boolean(selectedOption);
-  const mood = !hasAnswered ? "idle" : selectedOption?.correct ? "happy" : "thinking";
+  const selectedChoice = selected ? question.choices[Number(selected)] : undefined;
+  const hasAnswered = Boolean(selectedChoice);
+  const mood = !hasAnswered ? "idle" : selectedChoice === question.correctAnswer ? "happy" : "thinking";
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   function handleSelect(optionId: string) {
     if (selected) return;
 
-    const option = question.options.find((item) => item.id === optionId);
     setSelected(optionId);
 
-    if (option?.correct) {
+    if (question.choices[Number(optionId)] === question.correctAnswer) {
       setScore((currentScore) => currentScore + 1);
     }
   }
@@ -86,6 +108,7 @@ export function PlayPage() {
   }
 
   function handlePlayAgain() {
+    setGameSession({ mode, questions: sampleQuestions(QUESTIONS[mode]) });
     setCurrentIndex(0);
     setSelected(null);
     setScore(0);
@@ -208,9 +231,11 @@ export function PlayPage() {
               </p>
 
               <div className="flex flex-col gap-2.5">
-                {question.options.map((option, index) => {
-                  const isCorrect = option.correct;
-                  const isSelected = selected === option.id;
+                {question.choices.map((choice, index) => {
+                  const optionId = String(index);
+                  const optionLabel = String.fromCharCode(97 + index);
+                  const isCorrect = choice === question.correctAnswer;
+                  const isSelected = selected === optionId;
                   const revealCorrect = hasAnswered && isCorrect;
                   const revealWrongSelection = hasAnswered && isSelected && !isCorrect;
                   const bg = revealCorrect ? "#f0fdf4" : "white";
@@ -220,11 +245,11 @@ export function PlayPage() {
 
                   return (
                     <motion.button
-                      key={option.id}
+                      key={choice}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
-                      onClick={() => handleSelect(option.id)}
+                      onClick={() => handleSelect(optionId)}
                       disabled={hasAnswered}
                       className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left"
                       style={{ background: bg, border: `2px solid ${border}`, cursor: hasAnswered ? "default" : "pointer" }}
@@ -233,9 +258,9 @@ export function PlayPage() {
                         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs"
                         style={{ background: dotBg, color: "white", fontFamily: "Fredoka, sans-serif", fontWeight: 700 }}
                       >
-                        {option.id.toUpperCase()}
+                        {optionLabel.toUpperCase()}
                       </span>
-                      <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{option.label}</span>
+                      <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{choice}</span>
                       {revealCorrect && <span className="ml-auto text-sm" style={{ color: "#10b981" }}>✓</span>}
                       {revealWrongSelection && <span className="ml-auto text-sm" style={{ color: "#ff4d7e" }}>×</span>}
                     </motion.button>

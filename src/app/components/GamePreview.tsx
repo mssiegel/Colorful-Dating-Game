@@ -4,11 +4,8 @@ import { FloatingChip } from "./FloatingChip";
 const QUESTION = {
   scenario:
     "You borrowed something. Returning it is inconvenient. You're thinking of keeping it for now.",
-  options: [
-    { id: "a", label: "A break in personal values", correct: true },
-    { id: "b", label: "Impractical thinking", correct: false },
-    { id: "c", label: "A love for life", correct: false },
-  ],
+  choices: ["A break in personal values", "Impractical thinking", "A love for life"],
+  correctAnswer: "A break in personal values",
 };
 
 export function GamePreview() {
@@ -47,8 +44,9 @@ export function GamePreview() {
         </div>
 
         <div className="flex flex-col gap-2">
-          {QUESTION.options.map((opt) => {
-            const isCorrect = opt.correct;
+          {QUESTION.choices.map((choice, index) => {
+            const optionLabel = String.fromCharCode(97 + index);
+            const isCorrect = choice === QUESTION.correctAnswer;
             const bg = isCorrect ? "#f0fdf4" : "white";
             const border = isCorrect ? "2px solid #34d399" : "2px solid rgba(0,0,0,0.08)";
             const textColor = isCorrect ? "#065f46" : "#9d8aaa";
@@ -56,7 +54,7 @@ export function GamePreview() {
 
             return (
               <div
-                key={opt.id}
+                key={choice}
                 className="text-left rounded-xl px-3 py-2.5 flex items-center gap-3"
                 style={{ background: bg, border }}
               >
@@ -64,10 +62,10 @@ export function GamePreview() {
                   className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs"
                   style={{ background: dotBg, color: "white", fontFamily: "Fredoka, sans-serif", fontWeight: 700 }}
                 >
-                  {opt.id.toUpperCase()}
+                  {optionLabel.toUpperCase()}
                 </span>
                 <span style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
-                  {opt.label}
+                  {choice}
                 </span>
                 {isCorrect && <span className="ml-auto text-green-500 text-sm">✓</span>}
               </div>
