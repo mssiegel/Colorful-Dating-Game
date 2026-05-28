@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
+import { Play } from "lucide-react";
 import { GamePreview } from "./GamePreview";
 
 const MODES = [
@@ -108,7 +109,8 @@ export function LandingPage() {
                 cursor: "pointer",
               }}
             >
-              Start {activeModeConfig.label} ▶
+              Start {activeModeConfig.label}
+              <Play aria-hidden="true" size={18} fill="currentColor" strokeWidth={2.5} />
             </motion.button>
             <p style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}>
               Selected mode:{" "}

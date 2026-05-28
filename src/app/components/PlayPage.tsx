@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
+import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
@@ -67,9 +68,10 @@ export function PlayPage() {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="rounded-full px-5 py-3"
+            className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3"
             style={{ background: "linear-gradient(135deg, #ff4d7e, #7c3aed)", color: "white", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
           >
+            <Home aria-hidden="true" size={17} strokeWidth={2.5} />
             Back to home
           </button>
         </div>
@@ -139,18 +141,20 @@ export function PlayPage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={handlePlayAgain}
-              className="flex-1 rounded-full px-5 py-3"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3"
               style={{ background: "linear-gradient(135deg, #ff4d7e, #7c3aed)", color: "white", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
             >
+              <RotateCcw aria-hidden="true" size={17} strokeWidth={2.5} />
               Play again
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/")}
-              className="flex-1 rounded-full px-5 py-3"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3"
               style={{ background: "#f8f8fb", color: "#6b5b7b", border: "2px solid rgba(0,0,0,0.06)", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
             >
+              <Home aria-hidden="true" size={17} strokeWidth={2.5} />
               Back to home
             </motion.button>
           </div>
@@ -165,9 +169,10 @@ export function PlayPage() {
         <header className="flex items-center justify-between gap-4">
           <button
             onClick={() => navigate("/")}
-            className="rounded-full px-4 py-2"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2"
             style={{ background: "rgba(255,255,255,0.7)", color: "#6b5b7b", border: "2px solid rgba(255,77,126,0.1)", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
           >
+            <ArrowLeft aria-hidden="true" size={16} strokeWidth={2.5} />
             Back
           </button>
           <div className="text-right">
@@ -261,8 +266,8 @@ export function PlayPage() {
                         {optionLabel.toUpperCase()}
                       </span>
                       <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{choice}</span>
-                      {revealCorrect && <span className="ml-auto text-sm" style={{ color: "#10b981" }}>✓</span>}
-                      {revealWrongSelection && <span className="ml-auto text-sm" style={{ color: "#ff4d7e" }}>×</span>}
+                      {revealCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: "#10b981" }} />}
+                      {revealWrongSelection && <X aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: "#ff4d7e" }} />}
                     </motion.button>
                   );
                 })}
@@ -295,10 +300,11 @@ export function PlayPage() {
                     whileHover={{ scale: 1.02, boxShadow: "0 12px 32px rgba(255,77,126,0.24)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
-                    className="mt-4 w-full rounded-xl py-3 text-center"
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center"
                     style={{ background: "linear-gradient(135deg, #7c3aed, #ff4d7e)", color: "white", fontFamily: "Fredoka, sans-serif", fontSize: "1rem", cursor: "pointer" }}
                   >
-                    {currentIndex === questions.length - 1 ? "See score" : "Next Question ->"}
+                    {currentIndex === questions.length - 1 ? "See score" : "Next Question"}
+                    <ArrowRight aria-hidden="true" size={18} strokeWidth={2.5} />
                   </motion.button>
                 )}
               </AnimatePresence>

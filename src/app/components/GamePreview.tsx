@@ -1,3 +1,4 @@
+import { ArrowRight, Check } from "lucide-react";
 import { Character } from "./Character";
 import { FloatingChip } from "./FloatingChip";
 
@@ -69,7 +70,7 @@ export function GamePreview() {
                 <span style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
                   {choice}
                 </span>
-                {isCorrect && <span className="ml-auto text-green-500 text-sm">✓</span>}
+                {isCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={16} strokeWidth={3} style={{ color: "#10b981" }} />}
               </div>
             );
           })}
@@ -85,7 +86,7 @@ export function GamePreview() {
         </div>
 
         <div
-          className="w-full rounded-xl py-2.5 mt-3 text-center"
+          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-center"
           style={{
             background: "linear-gradient(135deg, #7c3aed, #ff4d7e)",
             color: "white",
@@ -97,7 +98,8 @@ export function GamePreview() {
             pointerEvents: "none",
           }}
         >
-          Next Question →
+          Next Question
+          <ArrowRight aria-hidden="true" size={16} strokeWidth={2.5} />
         </div>
       </div>
     </div>
