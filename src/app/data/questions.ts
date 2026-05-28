@@ -219,6 +219,72 @@ export const QUESTIONS: Record<ModeId, Question[]> = {
   ]),
 };
 
+type ConversationPromptMood = "light" | "funny" | "surprising" | "emotional" | "personal";
+
+const CONVERSATION_PROMPT_MIX: Record<ConversationPromptMood, string[]> = {
+  light: [
+    "What tiny thing from today deserves a little more appreciation?",
+    "What is one low-pressure thing you would enjoy doing together soon?",
+    "What small comfort has been making life nicer lately?",
+    "What ordinary part of your day would be weirdly satisfying to share?",
+    "What is one tiny win from this week?",
+  ],
+  funny: [
+    "What harmless opinion are you prepared to defend with unnecessary confidence?",
+    "What is a tiny mistake that became funnier after a little time passed?",
+    "What food, song, movie, or habit do you secretly take too seriously?",
+    "What is your most ridiculous recent overreaction to something small?",
+    "What is a bad joke, silly phrase, or inside-bit that still works on you?",
+  ],
+  surprising: [
+    "What is something about you that people often guess wrong?",
+    "What is one thing you changed your mind about recently, even a little?",
+    "What is a small detail from your life that would surprise the other person?",
+    "What is something you enjoy more than people would expect?",
+    "What is a random memory that still pops into your head for no clear reason?",
+  ],
+  emotional: [
+    "What has felt tender, meaningful, or quietly important to you lately?",
+    "What kind of reassurance would feel good to hear right now?",
+    "What is one thing you want to feel more understood about?",
+    "What is something you have been carrying that you do not want to carry alone?",
+    "What made you feel cared for recently, even in a small way?",
+  ],
+  personal: [
+    "What is a little habit, preference, or detail that feels very you?",
+    "What do you need more of lately: rest, fun, help, honesty, or affection?",
+    "What is something you are proud of that you do not always mention?",
+    "What is one way you have been growing that the other person might not see?",
+    "What helps you feel safest when you are being honest?",
+  ],
+};
+
+const PROMPT_MOODS = Object.keys(CONVERSATION_PROMPT_MIX) as ConversationPromptMood[];
+
+function shuffleItems<T>(items: T[]): T[] {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
+function sampleConversationPrompts(count: number): string[] {
+  const moods = shuffleItems(PROMPT_MOODS);
+  const promptPools = Object.fromEntries(
+    PROMPT_MOODS.map((mood) => [mood, shuffleItems(CONVERSATION_PROMPT_MIX[mood])]),
+  ) as Record<ConversationPromptMood, string[]>;
+
+  return Array.from({ length: count }, (_, index) => {
+    const mood = moods[index % moods.length];
+    const prompts = promptPools[mood];
+    return prompts[index % prompts.length];
+  });
+}
+
 export function sampleQuestions(questionBank: Question[], count = 5): Question[] {
   const shuffled = [...questionBank];
 
@@ -227,7 +293,14 @@ export function sampleQuestions(questionBank: Question[], count = 5): Question[]
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
 
-  return shuffled.slice(0, count).map(shuffleChoices);
+  const conversationPrompts = sampleConversationPrompts(count);
+
+  return shuffled.slice(0, count).map((question, index) =>
+    shuffleChoices({
+      ...question,
+      conversationPrompt: conversationPrompts[index] ?? question.conversationPrompt,
+    }),
+  );
 }
 
 export const MODE_CONFIG: Record<ModeId, Omit<ModeConfig, "id">> = {
