@@ -314,15 +314,26 @@ export function PlayPage() {
               <AnimatePresence>
                 {hasAnswered && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.25 }}
-                    className="mt-3 rounded-xl px-3 py-3"
-                    style={{ background: "#f5f0ff", border: "2px solid rgba(124,58,237,0.2)" }}
+                    className="relative mt-4 overflow-hidden rounded-2xl px-4 py-4"
+                    style={{
+                      background: `linear-gradient(135deg, ${modeConfig.bg}, #ffffff)`,
+                      border: `2px solid ${modeConfig.color}`,
+                      boxShadow: `0 12px 30px ${modeConfig.glow}, 0 3px 12px rgba(124,58,237,0.14)`,
+                    }}
                   >
-                    <p style={{ color: "#5b21b6", fontSize: "0.9rem", lineHeight: 1.55 }}>
-                      <strong>Talk together:</strong> {question.conversationPrompt}
+                    <div
+                      className="absolute bottom-3 left-0 top-3 w-1 rounded-r-full"
+                      style={{ background: modeConfig.color }}
+                    />
+                    <p style={{ color: "#4c1d95", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                      <strong style={{ color: modeConfig.color, fontFamily: "Fredoka, sans-serif", fontSize: "1rem" }}>
+                        Talk together:
+                      </strong>{" "}
+                      {question.conversationPrompt}
                     </p>
                   </motion.div>
                 )}

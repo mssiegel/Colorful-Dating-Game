@@ -77,11 +77,23 @@ export function GamePreview() {
         </div>
 
         <div
-          className="rounded-xl px-3 py-2.5 mt-2"
-          style={{ background: "#f5f0ff", border: "2px solid rgba(124,58,237,0.2)" }}
+          className="relative mt-3 overflow-hidden rounded-2xl px-4 py-3"
+          style={{
+            background: "linear-gradient(135deg, #f5f0ff, #fff7fb)",
+            border: "2px solid rgba(124,58,237,0.42)",
+            boxShadow: "0 10px 26px rgba(124,58,237,0.16), 0 3px 12px rgba(255,77,126,0.12)",
+          }}
         >
-          <p style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.78rem", color: "#5b21b6", lineHeight: "1.5" }}>
-            💬 <strong>Share a memory!</strong> {QUESTION.conversationPrompt}
+          <div
+            className="absolute bottom-2.5 left-0 top-2.5 w-1 rounded-r-full"
+            style={{ background: "#7c3aed" }}
+          />
+          <p style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: "#4c1d95", lineHeight: "1.55" }}>
+            💬{" "}
+            <strong style={{ color: "#7c3aed", fontFamily: "Fredoka, sans-serif", fontSize: "0.9rem" }}>
+              Share a memory!
+            </strong>{" "}
+            {QUESTION.conversationPrompt}
           </p>
         </div>
 
