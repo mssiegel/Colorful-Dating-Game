@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Play } from "lucide-react";
 import { GamePreview } from "./GamePreview";
 import { DEFAULT_MODE_ID, MODES, type ModeId } from "../data/questions";
+import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
 
 export function LandingPage() {
   const [activeMode, setActiveMode] = useState<ModeId>(DEFAULT_MODE_ID);
@@ -13,18 +14,18 @@ export function LandingPage() {
   return (
     <div
       className="min-h-screen w-full"
-      style={{ fontFamily: "Nunito, sans-serif", background: "linear-gradient(160deg, #fff0f5 0%, #f8f4ff 50%, #fff5f0 100%)" }}
+      style={pageStyle}
     >
       <nav className="flex items-center justify-between px-5 py-4 sm:px-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
-            style={{ background: "linear-gradient(135deg, #ff4d7e, #7c3aed)", color: "white" }}
+            style={{ background: gradients.brand, color: colors.white }}
           >
             💑
           </div>
-          <span style={{ fontFamily: "Fredoka, sans-serif", fontSize: "1.25rem", color: "#1a0a2e" }}>
-            Two<span style={{ color: "#ff4d7e" }}>Minds</span>
+          <span style={{ fontFamily: fonts.heading, fontSize: "1.25rem", color: colors.text }}>
+            Two<span style={{ color: colors.primary }}>Minds</span>
           </span>
         </div>
       </nav>
@@ -35,10 +36,10 @@ export function LandingPage() {
             <h1
               className="text-[2.55rem] sm:text-[3.4rem] lg:text-[4.2rem]"
               style={{
-                fontFamily: "Fredoka, sans-serif",
+                fontFamily: fonts.heading,
                 lineHeight: "1.1",
                 fontWeight: 700,
-                color: "#ff4d7e",
+                color: colors.primary,
                 marginBottom: "0.1em",
               }}
             >
@@ -47,32 +48,32 @@ export function LandingPage() {
             <h1
               className="text-[2.55rem] sm:text-[3.4rem] lg:text-[4.2rem]"
               style={{
-                fontFamily: "Fredoka, sans-serif",
+                fontFamily: fonts.heading,
                 lineHeight: "1.1",
                 fontWeight: 700,
-                color: "#7c3aed",
+                color: colors.accent,
               }}
             >
               Grow closer.
             </h1>
           </div>
 
-          <p className="max-w-[420px]" style={{ color: "#6b5b7b", fontSize: "1.05rem", lineHeight: "1.7" }}>
+          <p className="max-w-[420px]" style={{ color: colors.muted, fontSize: "1.05rem", lineHeight: "1.7" }}>
             A wisdom game for couples. Each question has one right answer — and a story only you two can share.
           </p>
 
           <div className="flex flex-col items-start gap-2">
             <motion.button
-              whileHover={{ scale: 1.03, boxShadow: "0 12px 32px rgba(255,77,126,0.3)" }}
+              whileHover={{ scale: 1.03, boxShadow: shadows.buttonHover }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(`/play/${activeMode}`)}
               className="flex items-center gap-2 px-7 py-3.5 rounded-full"
               style={{
-                background: "linear-gradient(135deg, #ff4d7e, #7c3aed)",
-                color: "white",
-                fontFamily: "Fredoka, sans-serif",
+                background: gradients.brand,
+                color: colors.white,
+                fontFamily: fonts.heading,
                 fontSize: "1.1rem",
-                boxShadow: "0 6px 20px rgba(255,77,126,0.25)",
+                boxShadow: shadows.button,
                 cursor: "pointer",
               }}
             >
@@ -81,14 +82,14 @@ export function LandingPage() {
             </motion.button>
             <p style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}>
               Selected mode:{" "}
-              <span style={{ color: activeModeConfig.color, fontFamily: "Fredoka, sans-serif" }}>
+              <span style={{ color: activeModeConfig.color, fontFamily: fonts.heading }}>
                 {activeModeConfig.emoji} {activeModeConfig.label}
               </span>
             </p>
           </div>
 
           <div>
-            <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "#b0afc0", letterSpacing: "0.08em" }} className="uppercase mb-3">
+            <p style={{ fontSize: "0.75rem", fontWeight: 800, color: colors.pale, letterSpacing: "0.08em" }} className="uppercase mb-3">
               Choose your mode
             </p>
             <div className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
@@ -104,7 +105,7 @@ export function LandingPage() {
                     animate={{
                       background: isActive ? mode.surfaceBg : "#f8f8fb",
                       borderColor: isActive ? mode.border : "rgba(0,0,0,0)",
-                      boxShadow: isActive ? `0 8px 24px ${mode.softGlow}` : "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
+                      boxShadow: isActive ? `0 8px 24px ${mode.softGlow}` : shadows.choiceRest,
                     }}
                     transition={{ duration: 0.2 }}
                     className="relative flex w-full flex-col items-start px-4 py-3 rounded-2xl sm:w-auto"
@@ -112,7 +113,7 @@ export function LandingPage() {
                       border: "2px solid",
                       minWidth: "118px",
                       cursor: "pointer",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
+                      boxShadow: shadows.choiceRest,
                     }}
                   >
                     {mode.recommended && (
@@ -122,8 +123,8 @@ export function LandingPage() {
                         className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full whitespace-nowrap"
                         style={{
                           background: mode.color,
-                          color: "white",
-                          fontFamily: "Nunito, sans-serif",
+                          color: colors.white,
+                          fontFamily: fonts.body,
                           fontWeight: 800,
                           fontSize: "0.6rem",
                           letterSpacing: "0.04em",
@@ -151,15 +152,15 @@ export function LandingPage() {
 
                     <span
                       style={{
-                        fontFamily: "Fredoka, sans-serif",
+                        fontFamily: fonts.heading,
                         fontSize: "0.92rem",
-                        color: isActive ? mode.color : "#1a0a2e",
+                        color: isActive ? mode.color : colors.text,
                         transition: "color 0.2s",
                       }}
                     >
                       {mode.label}
                     </span>
-                    <span style={{ fontSize: "0.7rem", color: "#b0afc0", fontWeight: 700, fontFamily: "Nunito, sans-serif" }}>
+                    <span style={{ fontSize: "0.7rem", color: colors.pale, fontWeight: 700, fontFamily: fonts.body }}>
                       {mode.tagline}
                     </span>
 
@@ -182,9 +183,9 @@ export function LandingPage() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="relative rounded-3xl overflow-hidden min-h-[390px] sm:min-h-[440px] lg:min-h-[480px]"
           style={{
-            background: "#ffffff",
-            border: "2px solid rgba(255,77,126,0.08)",
-            boxShadow: "0 8px 40px rgba(124,58,237,0.1), 0 2px 12px rgba(255,77,126,0.08)",
+            background: colors.white,
+            border: borders.softCard,
+            boxShadow: shadows.floatingCard,
           }}
         >
           <GamePreview />

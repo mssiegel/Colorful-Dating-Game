@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { borders, colors, fonts } from "../visualTokens";
 
 export function FloatingChip({
   children,
@@ -22,11 +23,11 @@ export function FloatingChip({
       }}
       className={`absolute px-4 py-2 rounded-full text-sm shadow-md${className ? ` ${className}` : ""}`}
       style={{
-        background: "white",
-        fontFamily: "Nunito, sans-serif",
+        background: colors.white,
+        fontFamily: fonts.body,
         fontWeight: 700,
-        color: "#1a0a2e",
-        border: "2px solid rgba(255,77,126,0.15)",
+        color: colors.text,
+        border: borders.chip,
         whiteSpace: "nowrap",
         ...style,
       }}

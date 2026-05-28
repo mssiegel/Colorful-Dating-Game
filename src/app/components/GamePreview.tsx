@@ -1,6 +1,7 @@
 import { ArrowRight, Check } from "lucide-react";
 import { Character } from "./Character";
 import { FloatingChip } from "./FloatingChip";
+import { borders, colors, fonts, gradients, shadows } from "../visualTokens";
 
 const QUESTION = {
   scenario:
@@ -33,15 +34,15 @@ export function GamePreview() {
       <div className="w-full max-w-[340px] mx-auto">
         <div
           className="rounded-2xl p-4 mb-3"
-          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: "0 4px 20px rgba(255,77,126,0.08)" }}
+          style={{ background: colors.white, border: borders.card, boxShadow: shadows.card }}
         >
           <p
             className="text-xs uppercase tracking-widest mb-1"
-            style={{ fontFamily: "Nunito, sans-serif", color: "#ff4d7e", fontWeight: 800 }}
+            style={{ fontFamily: fonts.body, color: colors.primary, fontWeight: 800 }}
           >
             Scenario · Round 1
           </p>
-          <p style={{ fontFamily: "Nunito, sans-serif", color: "#1a0a2e", fontSize: "0.88rem", lineHeight: "1.55" }}>
+          <p style={{ fontFamily: fonts.body, color: colors.text, fontSize: "0.88rem", lineHeight: "1.55" }}>
             {QUESTION.scenario}
           </p>
         </div>
@@ -50,10 +51,10 @@ export function GamePreview() {
           {QUESTION.choices.map((choice, index) => {
             const optionLabel = String.fromCharCode(97 + index);
             const isCorrect = choice === QUESTION.correctAnswer;
-            const bg = isCorrect ? "#f0fdf4" : "white";
-            const border = isCorrect ? "2px solid #34d399" : "2px solid rgba(0,0,0,0.08)";
-            const textColor = isCorrect ? "#065f46" : "#9d8aaa";
-            const dotBg = isCorrect ? "#34d399" : "#ececf0";
+            const bg = isCorrect ? colors.correctBg : colors.white;
+            const border = isCorrect ? `2px solid ${colors.correctBorder}` : `2px solid ${borders.neutralChoice}`;
+            const textColor = isCorrect ? colors.correctText : colors.subtle;
+            const dotBg = isCorrect ? colors.correctBorder : colors.neutralDot;
 
             return (
               <div
@@ -63,14 +64,14 @@ export function GamePreview() {
               >
                 <span
                   className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs"
-                  style={{ background: dotBg, color: "white", fontFamily: "Fredoka, sans-serif", fontWeight: 700 }}
+                  style={{ background: dotBg, color: colors.white, fontFamily: fonts.heading, fontWeight: 700 }}
                 >
                   {optionLabel.toUpperCase()}
                 </span>
-                <span style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
+                <span style={{ fontFamily: fonts.body, fontSize: "0.82rem", color: textColor, fontWeight: 600 }}>
                   {choice}
                 </span>
-                {isCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={16} strokeWidth={3} style={{ color: "#10b981" }} />}
+                {isCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={16} strokeWidth={3} style={{ color: colors.correctIcon }} />}
               </div>
             );
           })}
@@ -86,11 +87,11 @@ export function GamePreview() {
         >
           <div
             className="absolute bottom-2.5 left-0 top-2.5 w-1 rounded-r-full"
-            style={{ background: "#7c3aed" }}
+            style={{ background: colors.accent }}
           />
-          <p style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.82rem", color: "#4c1d95", lineHeight: "1.55" }}>
+          <p style={{ fontFamily: fonts.body, fontSize: "0.82rem", color: colors.conversationText, lineHeight: "1.55" }}>
             💬{" "}
-            <strong style={{ color: "#7c3aed", fontFamily: "Fredoka, sans-serif", fontSize: "0.9rem" }}>
+            <strong style={{ color: colors.accent, fontFamily: fonts.heading, fontSize: "0.9rem" }}>
               Share a memory!
             </strong>{" "}
             {QUESTION.conversationPrompt}
@@ -100,9 +101,9 @@ export function GamePreview() {
         <div
           className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-center"
           style={{
-            background: "linear-gradient(135deg, #7c3aed, #ff4d7e)",
-            color: "white",
-            fontFamily: "Fredoka, sans-serif",
+            background: gradients.brandReverse,
+            color: colors.white,
+            fontFamily: fonts.heading,
             fontSize: "0.95rem",
             filter: "blur(1.5px)",
             opacity: 0.5,

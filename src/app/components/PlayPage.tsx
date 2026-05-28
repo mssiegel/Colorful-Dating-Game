@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { MODES, QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
+import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
 import { Character } from "./Character";
 
 type GameSession = { mode: ModeId | null; questions: Question[] };
@@ -16,11 +17,6 @@ function getScoreMessage(score: number) {
   if (score >= 3) return "Great minds think alike";
   return "Keep exploring together";
 }
-
-const pageStyle = {
-  fontFamily: "Nunito, sans-serif",
-  background: "linear-gradient(160deg, #fff0f5 0%, #f8f4ff 50%, #fff5f0 100%)",
-};
 
 const questionTransition = {
   duration: 0.32,
@@ -80,18 +76,18 @@ export function PlayPage() {
       <div className="min-h-screen flex items-center justify-center px-6" style={pageStyle}>
         <div
           className="w-full max-w-sm rounded-2xl p-6 text-center"
-          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: "0 4px 20px rgba(255,77,126,0.08)" }}
+          style={{ background: colors.white, border: borders.card, boxShadow: shadows.card }}
         >
-          <p style={{ fontFamily: "Fredoka, sans-serif", color: "#1a0a2e", fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+          <p style={{ fontFamily: fonts.heading, color: colors.text, fontSize: "1.5rem", marginBottom: "0.5rem" }}>
             Mode not found
           </p>
-          <p style={{ color: "#6b5b7b", lineHeight: 1.6, marginBottom: "1.25rem" }}>
+          <p style={{ color: colors.muted, lineHeight: 1.6, marginBottom: "1.25rem" }}>
             Pick a game mode from the home screen to start a fresh round.
           </p>
           <button
             onClick={() => navigate("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3"
-            style={{ background: "linear-gradient(135deg, #ff4d7e, #7c3aed)", color: "white", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
+            style={{ background: gradients.brand, color: colors.white, fontFamily: fonts.heading, cursor: "pointer" }}
           >
             <Home aria-hidden="true" size={17} strokeWidth={2.5} />
             Back to home
@@ -156,16 +152,16 @@ export function PlayPage() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.35 }}
           className="w-full max-w-md rounded-3xl p-7 text-center"
-          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: `0 10px 42px ${modeConfig.glow}` }}
+          style={{ background: colors.white, border: borders.card, boxShadow: `0 10px 42px ${modeConfig.glow}` }}
         >
           <div className="mb-4 text-4xl">{modeConfig.emoji}</div>
-          <p style={{ fontFamily: "Fredoka, sans-serif", color: modeConfig.color, fontSize: "0.85rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+          <p style={{ fontFamily: fonts.heading, color: modeConfig.color, fontSize: "0.85rem", fontWeight: 700, marginBottom: "0.5rem" }}>
             {modeConfig.label} complete
           </p>
-          <h1 style={{ fontFamily: "Fredoka, sans-serif", color: "#1a0a2e", fontSize: "2.5rem", lineHeight: 1.05, marginBottom: "0.75rem" }}>
+          <h1 style={{ fontFamily: fonts.heading, color: colors.text, fontSize: "2.5rem", lineHeight: 1.05, marginBottom: "0.75rem" }}>
             You got {score}/5!
           </h1>
-          <p style={{ color: "#6b5b7b", fontSize: "1.05rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>{getScoreMessage(score)}</p>
+          <p style={{ color: colors.muted, fontSize: "1.05rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>{getScoreMessage(score)}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <motion.button
@@ -173,7 +169,7 @@ export function PlayPage() {
               whileTap={{ scale: 0.97 }}
               onClick={handlePlayAgain}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3"
-              style={{ background: "linear-gradient(135deg, #ff4d7e, #7c3aed)", color: "white", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
+              style={{ background: gradients.brand, color: colors.white, fontFamily: fonts.heading, cursor: "pointer" }}
             >
               <RotateCcw aria-hidden="true" size={17} strokeWidth={2.5} />
               Play again
@@ -183,7 +179,7 @@ export function PlayPage() {
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/")}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3"
-              style={{ background: "#f8f8fb", color: "#6b5b7b", border: "2px solid rgba(0,0,0,0.06)", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
+              style={{ background: colors.softSurface, color: colors.muted, border: borders.softAction, fontFamily: fonts.heading, cursor: "pointer" }}
             >
               <Home aria-hidden="true" size={17} strokeWidth={2.5} />
               Back to home
@@ -201,16 +197,16 @@ export function PlayPage() {
           <button
             onClick={() => navigate("/")}
             className="inline-flex items-center gap-2 rounded-full px-4 py-2"
-            style={{ background: "rgba(255,255,255,0.7)", color: "#6b5b7b", border: "2px solid rgba(255,77,126,0.1)", fontFamily: "Fredoka, sans-serif", cursor: "pointer" }}
+            style={{ background: "rgba(255,255,255,0.7)", color: colors.muted, border: "2px solid rgba(255,77,126,0.1)", fontFamily: fonts.heading, cursor: "pointer" }}
           >
             <ArrowLeft aria-hidden="true" size={16} strokeWidth={2.5} />
             Back
           </button>
           <div className="text-right">
-            <p style={{ fontFamily: "Fredoka, sans-serif", color: modeConfig.color, fontSize: "1rem" }}>
+            <p style={{ fontFamily: fonts.heading, color: modeConfig.color, fontSize: "1rem" }}>
               {modeConfig.emoji} {modeConfig.label}
             </p>
-            <p style={{ color: "#9d8aaa", fontSize: "0.82rem", fontWeight: 800 }}>
+            <p style={{ color: colors.subtle, fontSize: "0.82rem", fontWeight: 800 }}>
               Round {currentIndex + 1} of {questions.length}
             </p>
           </div>
@@ -221,7 +217,7 @@ export function PlayPage() {
             className="h-full rounded-full"
             animate={{ width: `${progress}%` }}
             transition={{ type: "spring", stiffness: 130, damping: 22 }}
-            style={{ background: `linear-gradient(135deg, ${modeConfig.color}, #7c3aed)` }}
+            style={{ background: `linear-gradient(135deg, ${modeConfig.color}, ${colors.accent})` }}
           />
         </div>
 
@@ -231,7 +227,7 @@ export function PlayPage() {
           }}
           transition={{ duration: 0.28 }}
           className="relative overflow-hidden rounded-3xl px-4 pb-5 pt-6 sm:px-7 sm:pb-7"
-          style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)" }}
+          style={{ background: colors.white, border: borders.card }}
         >
           <div className="pointer-events-none absolute left-5 top-5 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-widest" style={{ background: modeConfig.bg, color: modeConfig.color }}>
             Question {currentIndex + 1}
@@ -259,15 +255,15 @@ export function PlayPage() {
             >
               <div
                 className="mb-3 rounded-2xl p-4"
-                style={{ background: "white", border: "2px solid rgba(255,77,126,0.12)", boxShadow: "0 4px 20px rgba(255,77,126,0.08)" }}
+                style={{ background: colors.white, border: borders.card, boxShadow: shadows.card }}
               >
                 <p className="mb-1 text-xs uppercase tracking-widest" style={{ color: modeConfig.color, fontWeight: 800 }}>
                   Scenario
                 </p>
-                <p style={{ color: "#1a0a2e", fontSize: "1rem", lineHeight: 1.6 }}>{question.scenario}</p>
+                <p style={{ color: colors.text, fontSize: "1rem", lineHeight: 1.6 }}>{question.scenario}</p>
               </div>
 
-              <p className="mb-3 text-center" style={{ fontFamily: "Fredoka, sans-serif", color: "#1a0a2e", fontSize: "1.25rem" }}>
+              <p className="mb-3 text-center" style={{ fontFamily: fonts.heading, color: colors.text, fontSize: "1.25rem" }}>
                 {question.prompt}
               </p>
 
@@ -279,10 +275,10 @@ export function PlayPage() {
                   const isSelected = selected === optionId;
                   const revealCorrect = hasAnswered && isCorrect;
                   const revealWrongSelection = hasAnswered && isSelected && !isCorrect;
-                  const bg = revealCorrect ? "#f0fdf4" : "white";
-                  const border = revealCorrect ? "#34d399" : revealWrongSelection ? "rgba(255,77,126,0.36)" : "rgba(0,0,0,0.08)";
-                  const textColor = revealCorrect ? "#065f46" : hasAnswered && !isSelected ? "#9d8aaa" : "#1a0a2e";
-                  const dotBg = revealCorrect ? "#34d399" : revealWrongSelection ? "#ff4d7e" : "#ececf0";
+                  const bg = revealCorrect ? colors.correctBg : colors.white;
+                  const border = revealCorrect ? colors.correctBorder : revealWrongSelection ? borders.selectedWrong : borders.neutralChoice;
+                  const textColor = revealCorrect ? colors.correctText : hasAnswered && !isSelected ? colors.subtle : colors.text;
+                  const dotBg = revealCorrect ? colors.correctBorder : revealWrongSelection ? colors.primary : colors.neutralDot;
 
                   return (
                     <motion.button
@@ -298,13 +294,13 @@ export function PlayPage() {
                     >
                       <span
                         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs"
-                        style={{ background: dotBg, color: "white", fontFamily: "Fredoka, sans-serif", fontWeight: 700 }}
+                        style={{ background: dotBg, color: colors.white, fontFamily: fonts.heading, fontWeight: 700 }}
                       >
                         {optionLabel.toUpperCase()}
                       </span>
                       <span style={{ color: textColor, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.35 }}>{choice}</span>
-                      {revealCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: "#10b981" }} />}
-                      {revealWrongSelection && <X aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: "#ff4d7e" }} />}
+                      {revealCorrect && <Check aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: colors.correctIcon }} />}
+                      {revealWrongSelection && <X aria-hidden="true" className="ml-auto shrink-0" size={18} strokeWidth={3} style={{ color: colors.primary }} />}
                     </motion.button>
                   );
                 })}
@@ -319,7 +315,7 @@ export function PlayPage() {
                     transition={{ duration: 0.25 }}
                     className="relative mt-4 overflow-hidden rounded-2xl px-4 py-4"
                     style={{
-                      background: `linear-gradient(135deg, ${modeConfig.bg}, #ffffff)`,
+                      background: `linear-gradient(135deg, ${modeConfig.bg}, ${colors.white})`,
                       border: `2px solid ${modeConfig.color}`,
                       boxShadow: `0 12px 30px ${modeConfig.glow}, 0 3px 12px rgba(124,58,237,0.14)`,
                     }}
@@ -328,8 +324,8 @@ export function PlayPage() {
                       className="absolute bottom-3 left-0 top-3 w-1 rounded-r-full"
                       style={{ background: modeConfig.color }}
                     />
-                    <p style={{ color: "#4c1d95", fontSize: "0.95rem", lineHeight: 1.6 }}>
-                      <strong style={{ color: modeConfig.color, fontFamily: "Fredoka, sans-serif", fontSize: "1rem" }}>
+                    <p style={{ color: colors.conversationText, fontSize: "0.95rem", lineHeight: 1.6 }}>
+                      <strong style={{ color: modeConfig.color, fontFamily: fonts.heading, fontSize: "1rem" }}>
                         Talk together:
                       </strong>{" "}
                       {question.conversationPrompt}
@@ -345,15 +341,15 @@ export function PlayPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.25 }}
-                    whileHover={{ scale: 1.02, boxShadow: "0 12px 32px rgba(255,77,126,0.24)" }}
+                    whileHover={{ scale: 1.02, boxShadow: shadows.nextHover }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
                     disabled={isAdvancing}
                     className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center"
                     style={{
-                      background: "linear-gradient(135deg, #7c3aed, #ff4d7e)",
-                      color: "white",
-                      fontFamily: "Fredoka, sans-serif",
+                      background: gradients.brandReverse,
+                      color: colors.white,
+                      fontFamily: fonts.heading,
                       fontSize: "1rem",
                       cursor: isAdvancing ? "wait" : "pointer",
                       opacity: isAdvancing ? 0.82 : 1,
