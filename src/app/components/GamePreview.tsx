@@ -3,9 +3,11 @@ import { FloatingChip } from "./FloatingChip";
 
 const QUESTION = {
   scenario:
-    "You borrowed something. Returning it is inconvenient. You're thinking of keeping it for now.",
-  choices: ["A break in personal values", "Impractical thinking", "A love for life"],
-  correctAnswer: "A break in personal values",
+    "A friend is telling a story that is taking way longer than expected, but you can tell it matters to them, so you stay interested.",
+  choices: ["Making space for someone", "Advanced nodding endurance", "Emergency story survival mode"],
+  correctAnswer: "Making space for someone",
+  conversationPrompt:
+    "Tell your partner about a time someone made you feel heard, even when what you were saying was small.",
 };
 
 export function GamePreview() {
@@ -78,7 +80,7 @@ export function GamePreview() {
           style={{ background: "#f5f0ff", border: "2px solid rgba(124,58,237,0.2)" }}
         >
           <p style={{ fontFamily: "Nunito, sans-serif", fontSize: "0.78rem", color: "#5b21b6", lineHeight: "1.5" }}>
-            💬 <strong>Share a memory!</strong> Tell your partner about a time you bent your own rules. What happened?
+            💬 <strong>Share a memory!</strong> {QUESTION.conversationPrompt}
           </p>
         </div>
 
