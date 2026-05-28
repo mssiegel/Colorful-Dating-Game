@@ -1,14 +1,10 @@
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { QUESTIONS, MODE_CONFIG, isModeId, sampleQuestions, type ModeConfig, type ModeId, type Question } from "../data/questions";
+import type { Question } from "../data/questions";
+import { useGameSession, type CharacterMood, type ModeTheme } from "../useGameSession";
 import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
 import { Character } from "./Character";
-
-type GameSession = { mode: ModeId | null; questions: Question[] };
-type ModeTheme = Omit<ModeConfig, "id">;
-type CharacterMood = "idle" | "happy" | "thinking";
 
 function getScoreMessage(score: number) {
   if (score === 5) return "Perfect wisdom!";
@@ -388,95 +384,22 @@ function NextQuestionButton({
 export function PlayPage() {
   const { mode } = useParams();
   const navigate = useNavigate();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
-  const [done, setDone] = useState(false);
-  const [isAdvancing, setIsAdvancing] = useState(false);
-  const [gameSession, setGameSession] = useState<GameSession>(() => ({
-    mode: isModeId(mode) ? mode : null,
-    questions: isModeId(mode) ? sampleQuestions(QUESTIONS[mode]) : [],
-  }));
+  const game = useGameSession(mode);
 
-  useEffect(() => {
-    if (!isModeId(mode)) {
-      if (gameSession.mode !== null) {
-        setGameSession({ mode: null, questions: [] });
-      }
-
-      return;
-    }
-
-    if (gameSession.mode === mode) return;
-
-    setGameSession({ mode, questions: sampleQuestions(QUESTIONS[mode]) });
-    setCurrentIndex(0);
-    setSelected(null);
-    setScore(0);
-    setDone(false);
-    setIsAdvancing(false);
-  }, [mode, gameSession.mode]);
-
-  if (!isModeId(mode)) {
+  if (!game.isValidMode) {
     return <InvalidModeScreen onHome={() => navigate("/")} />;
   }
 
-  const modeConfig = MODE_CONFIG[mode];
-  const questions = gameSession.questions;
-  const question = questions[currentIndex];
-  const selectedChoice = selected ? question.choices.find((choice) => choice.id === selected) : undefined;
-  const hasAnswered = Boolean(selectedChoice);
-  const mood = !hasAnswered ? "idle" : selectedChoice?.correct ? "happy" : "thinking";
-  const progress = ((currentIndex + 1) / questions.length) * 100;
-
-  function handleSelect(choiceId: string) {
-    if (selected || isAdvancing) return;
-
-    const choice = question.choices.find((item) => item.id === choiceId);
-    if (!choice) return;
-
-    setSelected(choiceId);
-
-    if (choice.correct) {
-      setScore((currentScore) => currentScore + 1);
-    }
+  if (!game.modeConfig || !game.question) {
+    return <InvalidModeScreen onHome={() => navigate("/")} />;
   }
 
-  function handleNext() {
-    if (!hasAnswered || isAdvancing) return;
-
-    setIsAdvancing(true);
-
-    if (currentIndex === questions.length - 1) {
-      window.setTimeout(() => {
-        setDone(true);
-        setIsAdvancing(false);
-      }, 180);
-      return;
-    }
-
-    window.setTimeout(() => {
-      setCurrentIndex((index) => index + 1);
-      setSelected(null);
-      setIsAdvancing(false);
-    }, 180);
-  }
-
-  function handlePlayAgain() {
-    setGameSession({ mode, questions: sampleQuestions(QUESTIONS[mode]) });
-    setCurrentIndex(0);
-    setSelected(null);
-    setScore(0);
-    setDone(false);
-    setIsAdvancing(false);
-  }
-
-  if (done) {
+  if (game.done) {
     return (
       <ScoreScreen
-        modeConfig={modeConfig}
-        score={score}
-        onPlayAgain={handlePlayAgain}
+        modeConfig={game.modeConfig}
+        score={game.score}
+        onPlayAgain={game.playAgain}
         onHome={() => navigate("/")}
       />
     );
@@ -485,19 +408,19 @@ export function PlayPage() {
   return (
     <div className="min-h-screen w-full px-5 py-6 sm:px-8 sm:py-8" style={pageStyle}>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
-        <GameHeader modeConfig={modeConfig} currentIndex={currentIndex} totalQuestions={questions.length} onHome={() => navigate("/")} />
-        <ProgressBar modeConfig={modeConfig} progress={progress} />
+        <GameHeader modeConfig={game.modeConfig} currentIndex={game.currentIndex} totalQuestions={game.totalQuestions} onHome={() => navigate("/")} />
+        <ProgressBar modeConfig={game.modeConfig} progress={game.progress} />
         <RoundCard
-          modeConfig={modeConfig}
-          question={question}
-          currentIndex={currentIndex}
-          selected={selected}
-          hasAnswered={hasAnswered}
-          mood={mood}
-          isAdvancing={isAdvancing}
-          isLastQuestion={currentIndex === questions.length - 1}
-          onSelect={handleSelect}
-          onNext={handleNext}
+          modeConfig={game.modeConfig}
+          question={game.question}
+          currentIndex={game.currentIndex}
+          selected={game.selected}
+          hasAnswered={game.hasAnswered}
+          mood={game.mood}
+          isAdvancing={game.isAdvancing}
+          isLastQuestion={game.isLastQuestion}
+          onSelect={game.selectChoice}
+          onNext={game.nextQuestion}
         />
       </div>
     </div>
