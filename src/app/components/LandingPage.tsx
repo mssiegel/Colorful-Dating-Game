@@ -40,6 +40,7 @@ const MODES = [
 export function LandingPage() {
   const [activeMode, setActiveMode] = useState("deep-dive");
   const navigate = useNavigate();
+  const activeModeConfig = MODES.find((mode) => mode.id === activeMode) ?? MODES[1];
 
   return (
     <div
@@ -92,22 +93,30 @@ export function LandingPage() {
             A wisdom game for couples. Each question has one right answer — and a story only you two can share.
           </p>
 
-          <motion.button
-            whileHover={{ scale: 1.03, boxShadow: "0 12px 32px rgba(255,77,126,0.3)" }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate(`/play/${activeMode}`)}
-            className="self-start flex items-center gap-2 px-7 py-3.5 rounded-full"
-            style={{
-              background: "linear-gradient(135deg, #ff4d7e, #7c3aed)",
-              color: "white",
-              fontFamily: "Fredoka, sans-serif",
-              fontSize: "1.1rem",
-              boxShadow: "0 6px 20px rgba(255,77,126,0.25)",
-              cursor: "pointer",
-            }}
-          >
-            Start playing ▶
-          </motion.button>
+          <div className="flex flex-col items-start gap-2">
+            <motion.button
+              whileHover={{ scale: 1.03, boxShadow: "0 12px 32px rgba(255,77,126,0.3)" }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate(`/play/${activeMode}`)}
+              className="flex items-center gap-2 px-7 py-3.5 rounded-full"
+              style={{
+                background: "linear-gradient(135deg, #ff4d7e, #7c3aed)",
+                color: "white",
+                fontFamily: "Fredoka, sans-serif",
+                fontSize: "1.1rem",
+                boxShadow: "0 6px 20px rgba(255,77,126,0.25)",
+                cursor: "pointer",
+              }}
+            >
+              Start {activeModeConfig.label} ▶
+            </motion.button>
+            <p style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}>
+              Selected mode:{" "}
+              <span style={{ color: activeModeConfig.color, fontFamily: "Fredoka, sans-serif" }}>
+                {activeModeConfig.emoji} {activeModeConfig.label}
+              </span>
+            </p>
+          </div>
 
           <div>
             <p style={{ fontSize: "0.75rem", fontWeight: 800, color: "#b0afc0", letterSpacing: "0.08em" }} className="uppercase mb-3">
@@ -120,6 +129,7 @@ export function LandingPage() {
                   <motion.button
                     key={mode.id}
                     onClick={() => setActiveMode(mode.id)}
+                    aria-pressed={isActive}
                     whileHover={{ y: -3, boxShadow: `0 8px 24px ${mode.glow}` }}
                     whileTap={{ scale: 0.95 }}
                     animate={{
