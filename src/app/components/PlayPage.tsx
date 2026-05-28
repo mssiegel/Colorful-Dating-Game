@@ -2,15 +2,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { MODES, QUESTIONS, MODE_CONFIG, sampleQuestions, type ModeId, type Question } from "../data/questions";
+import { QUESTIONS, MODE_CONFIG, isModeId, sampleQuestions, type ModeId, type Question } from "../data/questions";
 import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
 import { Character } from "./Character";
 
 type GameSession = { mode: ModeId | null; questions: Question[] };
-
-function isModeId(mode: string | undefined): mode is ModeId {
-  return Boolean(mode && MODES.some((modeConfig) => modeConfig.id === mode));
-}
 
 function getScoreMessage(score: number) {
   if (score === 5) return "Perfect wisdom!";

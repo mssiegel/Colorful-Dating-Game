@@ -249,3 +249,9 @@ export const MODES: ModeConfig[] = [
 ];
 
 export const DEFAULT_MODE_ID: ModeId = "deep-dive";
+
+export const MODE_IDS = MODES.map((mode) => mode.id);
+
+export function isModeId(mode: string | undefined): mode is ModeId {
+  return Boolean(mode && MODE_IDS.includes(mode as ModeId));
+}
