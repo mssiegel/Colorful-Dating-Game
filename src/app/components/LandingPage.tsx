@@ -4,27 +4,40 @@ import { useNavigate } from "react-router";
 import { Play } from "lucide-react";
 import { GamePreview } from "./GamePreview";
 import { DEFAULT_MODE_ID, MODES, type ModeId } from "../data/questions";
-import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
+import {
+  borders,
+  colors,
+  fonts,
+  gradients,
+  pageStyle,
+  shadows,
+} from "../visualTokens";
 
 export function LandingPage() {
   const [activeMode, setActiveMode] = useState<ModeId>(DEFAULT_MODE_ID);
   const navigate = useNavigate();
-  const activeModeConfig = MODES.find((mode) => mode.id === activeMode) ?? MODES.find((mode) => mode.id === DEFAULT_MODE_ID) ?? MODES[0];
+  const activeModeConfig =
+    MODES.find((mode) => mode.id === activeMode) ??
+    MODES.find((mode) => mode.id === DEFAULT_MODE_ID) ??
+    MODES[0];
 
   return (
-    <div
-      className="min-h-screen w-full"
-      style={pageStyle}
-    >
+    <div className="min-h-screen w-full" style={pageStyle}>
       <nav className="flex items-center justify-between px-5 py-4 sm:px-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
             style={{ background: gradients.brand, color: colors.white }}
           >
-            💑
+            👩‍❤️‍👨
           </div>
-          <span style={{ fontFamily: fonts.heading, fontSize: "1.25rem", color: colors.text }}>
+          <span
+            style={{
+              fontFamily: fonts.heading,
+              fontSize: "1.25rem",
+              color: colors.text,
+            }}
+          >
             Two<span style={{ color: colors.primary }}>Minds</span>
           </span>
         </div>
@@ -58,17 +71,33 @@ export function LandingPage() {
             </h1>
           </div>
 
-          <p className="max-w-[420px]" style={{ color: colors.muted, fontSize: "1.05rem", lineHeight: "1.7" }}>
-            A wisdom game for couples. Each question has one right answer — and a story only you two can share.
+          <p
+            className="max-w-[420px]"
+            style={{
+              color: colors.muted,
+              fontSize: "1.05rem",
+              lineHeight: "1.7",
+            }}
+          >
+            A wisdom game for couples. Each question has one right answer — and
+            a story only you two can share.
           </p>
 
           <div className="flex flex-col items-start gap-2">
             <motion.button
               animate={{
                 scale: [1, 1.035, 1],
-                boxShadow: [shadows.button, "0 14px 36px rgba(255,77,126,0.34)", shadows.button],
+                boxShadow: [
+                  shadows.button,
+                  "0 14px 36px rgba(255,77,126,0.34)",
+                  shadows.button,
+                ],
               }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
               whileHover={{ scale: 1.03, boxShadow: shadows.buttonHover }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(`/play/${activeMode}`)}
@@ -87,22 +116,41 @@ export function LandingPage() {
               <motion.span
                 aria-hidden="true"
                 animate={{ x: [0, 3, 0], scale: [1, 1.12, 1] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 1.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="flex"
               >
                 <Play size={18} fill="currentColor" strokeWidth={2.5} />
               </motion.span>
             </motion.button>
-            <p style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}>
+            <p
+              style={{ color: "#8b7b98", fontSize: "0.88rem", fontWeight: 700 }}
+            >
               Selected mode:{" "}
-              <span style={{ color: activeModeConfig.color, fontFamily: fonts.heading }}>
+              <span
+                style={{
+                  color: activeModeConfig.color,
+                  fontFamily: fonts.heading,
+                }}
+              >
                 {activeModeConfig.emoji} {activeModeConfig.label}
               </span>
             </p>
           </div>
 
           <div>
-            <p style={{ fontSize: "0.75rem", fontWeight: 800, color: colors.pale, letterSpacing: "0.08em" }} className="uppercase mb-3">
+            <p
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                color: colors.pale,
+                letterSpacing: "0.08em",
+              }}
+              className="uppercase mb-3"
+            >
               Choose your mode
             </p>
             <div className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
@@ -113,12 +161,17 @@ export function LandingPage() {
                     key={mode.id}
                     onClick={() => setActiveMode(mode.id)}
                     aria-pressed={isActive}
-                    whileHover={{ y: -3, boxShadow: `0 8px 24px ${mode.softGlow}` }}
+                    whileHover={{
+                      y: -3,
+                      boxShadow: `0 8px 24px ${mode.softGlow}`,
+                    }}
                     whileTap={{ scale: 0.95 }}
                     animate={{
                       background: isActive ? mode.surfaceBg : "#f8f8fb",
                       borderColor: isActive ? mode.border : "rgba(0,0,0,0)",
-                      boxShadow: isActive ? `0 8px 24px ${mode.softGlow}` : shadows.choiceRest,
+                      boxShadow: isActive
+                        ? `0 8px 24px ${mode.softGlow}`
+                        : shadows.choiceRest,
                     }}
                     transition={{ duration: 0.2 }}
                     className="relative flex w-full flex-col items-start px-4 py-3 rounded-2xl sm:w-auto"
@@ -131,7 +184,10 @@ export function LandingPage() {
                   >
                     {mode.recommended && (
                       <motion.span
-                        animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0.8 }}
+                        animate={{
+                          opacity: isActive ? 1 : 0,
+                          scale: isActive ? 1 : 0.8,
+                        }}
                         transition={{ duration: 0.2 }}
                         className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full whitespace-nowrap"
                         style={{
@@ -150,13 +206,25 @@ export function LandingPage() {
                     <div className="relative mb-2">
                       <motion.div
                         animate={{ scale: isActive ? 1 : 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 20,
+                        }}
                         className="absolute inset-0 rounded-full"
-                        style={{ background: mode.color, opacity: 0.15, transform: "scale(1.6)" }}
+                        style={{
+                          background: mode.color,
+                          opacity: 0.15,
+                          transform: "scale(1.6)",
+                        }}
                       />
                       <motion.span
                         animate={{ scale: isActive ? 1.15 : 1 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 18,
+                        }}
                         className="text-xl block"
                       >
                         {mode.emoji}
@@ -173,12 +241,22 @@ export function LandingPage() {
                     >
                       {mode.label}
                     </span>
-                    <span style={{ fontSize: "0.7rem", color: colors.pale, fontWeight: 700, fontFamily: fonts.body }}>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        color: colors.pale,
+                        fontWeight: 700,
+                        fontFamily: fonts.body,
+                      }}
+                    >
                       {mode.tagline}
                     </span>
 
                     <motion.div
-                      animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+                      animate={{
+                        scaleX: isActive ? 1 : 0,
+                        opacity: isActive ? 1 : 0,
+                      }}
                       transition={{ duration: 0.25 }}
                       className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full origin-left"
                       style={{ background: mode.color }}
