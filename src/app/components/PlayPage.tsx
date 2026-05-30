@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Home, RotateCcw, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import type { Question } from "../data/questions";
+import { MODES, type ModeId, type Question } from "../data/questions";
 import { useGameSession, type CharacterMood, type ModeTheme } from "../useGameSession";
 import { borders, colors, fonts, gradients, pageStyle, shadows } from "../visualTokens";
 import { Character } from "./Character";
@@ -60,23 +61,28 @@ function InvalidModeScreen({ onHome }: { onHome: () => void }) {
 }
 
 function ScoreScreen({
+  mode,
   modeConfig,
   score,
   onPlayAgain,
   onHome,
 }: {
+  mode: ModeId;
   modeConfig: ModeTheme;
   score: number;
-  onPlayAgain: () => void;
+  onPlayAgain: (mode: ModeId) => void;
   onHome: () => void;
 }) {
+  const [selectedMode, setSelectedMode] = useState<ModeId>(mode);
+  const selectedModeConfig = MODES.find((item) => item.id === selectedMode) ?? MODES[0];
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-10" style={pageStyle}>
       <motion.div
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35 }}
-        className="w-full max-w-md rounded-3xl p-7 text-center"
+        className="w-full max-w-lg rounded-3xl p-5 text-center sm:p-7"
         style={{ background: colors.white, border: borders.card, boxShadow: `0 10px 42px ${modeConfig.glow}` }}
       >
         <div className="mb-4 text-4xl">{modeConfig.emoji}</div>
@@ -86,13 +92,99 @@ function ScoreScreen({
         <h1 style={{ fontFamily: fonts.heading, color: colors.text, fontSize: "2.5rem", lineHeight: 1.05, marginBottom: "0.75rem" }}>
           You got {score}/5!
         </h1>
-        <p style={{ color: colors.muted, fontSize: "1.05rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>{getScoreMessage(score)}</p>
+        <p style={{ color: colors.muted, fontSize: "1.05rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>{getScoreMessage(score)}</p>
+
+        <div className="mb-5 text-left">
+          <p style={{ color: "#8b7b98", fontSize: "0.86rem", fontWeight: 700, marginBottom: "0.75rem", textAlign: "center" }}>
+            Selected mode:{" "}
+            <span style={{ color: selectedModeConfig.color, fontFamily: fonts.heading }}>
+              {selectedModeConfig.emoji} {selectedModeConfig.label}
+            </span>
+          </p>
+          <p
+            className="uppercase"
+            style={{
+              fontSize: "0.7rem",
+              fontWeight: 800,
+              color: colors.pale,
+              letterSpacing: "0.08em",
+              marginBottom: "0.65rem",
+              textAlign: "center",
+            }}
+          >
+            Choose your next mode
+          </p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {MODES.map((item) => {
+              const isActive = selectedMode === item.id;
+
+              return (
+                <motion.button
+                  key={item.id}
+                  onClick={() => setSelectedMode(item.id)}
+                  aria-pressed={isActive}
+                  whileHover={{ y: -2, boxShadow: `0 8px 20px ${item.softGlow}` }}
+                  whileTap={{ scale: 0.97 }}
+                  animate={{
+                    background: isActive ? item.surfaceBg : colors.softSurface,
+                    borderColor: isActive ? item.border : "rgba(0,0,0,0)",
+                    boxShadow: isActive ? `0 8px 20px ${item.softGlow}` : shadows.choiceRest,
+                  }}
+                  transition={{ duration: 0.2 }}
+                  className="relative flex min-h-[88px] w-full flex-col items-start rounded-2xl px-3.5 py-3 text-left"
+                  style={{
+                    border: "2px solid",
+                    cursor: "pointer",
+                    boxShadow: shadows.choiceRest,
+                  }}
+                >
+                  {item.recommended && (
+                    <motion.span
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        scale: isActive ? 1 : 0.82,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 whitespace-nowrap"
+                      style={{
+                        background: item.color,
+                        color: colors.white,
+                        fontFamily: fonts.body,
+                        fontWeight: 800,
+                        fontSize: "0.56rem",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Recommended
+                    </motion.span>
+                  )}
+                  <span className="mb-1 block text-lg" aria-hidden="true">
+                    {item.emoji}
+                  </span>
+                  <span
+                    style={{
+                      color: isActive ? item.color : colors.text,
+                      fontFamily: fonts.heading,
+                      fontSize: "0.9rem",
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                  <span style={{ color: colors.pale, fontSize: "0.68rem", fontWeight: 700, lineHeight: 1.25 }}>
+                    {item.tagline}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={onPlayAgain}
+            onClick={() => onPlayAgain(selectedMode)}
             className="inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3"
             style={{ background: gradients.brand, color: colors.white, fontFamily: fonts.heading, cursor: "pointer" }}
           >
@@ -390,16 +482,24 @@ export function PlayPage() {
     return <InvalidModeScreen onHome={() => navigate("/")} />;
   }
 
-  if (!game.modeConfig || !game.question) {
+  if (!game.mode || !game.modeConfig || !game.question) {
     return <InvalidModeScreen onHome={() => navigate("/")} />;
   }
 
   if (game.done) {
     return (
       <ScoreScreen
+        mode={game.mode}
         modeConfig={game.modeConfig}
         score={game.score}
-        onPlayAgain={game.playAgain}
+        onPlayAgain={(selectedMode) => {
+          if (selectedMode === game.mode) {
+            game.playAgain();
+            return;
+          }
+
+          navigate(`/play/${selectedMode}`);
+        }}
         onHome={() => navigate("/")}
       />
     );
